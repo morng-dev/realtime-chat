@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/joho/godotenv"
 )
@@ -20,6 +21,11 @@ type Config struct {
 	DB_NAME    string
 	DBSSL_Mode string
 
+	redis_HOST string
+	redis_PASS string
+	redis_PORT string
+	redis_DB   int
+
 	JWTSecret string
 }
 
@@ -27,6 +33,11 @@ func LoadConfig() (*Config, error) {
 	err := godotenv.Load()
 	if err != nil {
 		return nil, err
+	}
+
+	redis_db, err := strconv.Atoi(os.Getenv("redis_DB"))
+	if err != nil {
+		panic("error redis db not strconv")
 	}
 	config := &Config{
 		APP_ENV:  os.Getenv("APP_ENV"),
@@ -39,6 +50,11 @@ func LoadConfig() (*Config, error) {
 		DB_PORT:    os.Getenv("DB_PORT"),
 		DB_NAME:    os.Getenv("DB_NAME"),
 		DBSSL_Mode: os.Getenv("DBSSL_Mode"),
+
+		redis_HOST: os.Getenv("redis_HOST"),
+		redis_PASS: os.Getenv("redis_PASS"),
+		redis_PORT: os.Getenv("redis_PORT"),
+		redis_DB:   redis_db,
 
 		JWTSecret: os.Getenv("JWTSecret"),
 	}
